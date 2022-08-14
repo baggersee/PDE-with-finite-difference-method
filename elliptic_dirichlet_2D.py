@@ -2,16 +2,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Specifications of the problem
-f = lambda x,y: 0 # function for the Poisson equation
+f = lambda x,y: 0. # function for the Poisson equation
 gx_yBottom = lambda x: np.sin(np.pi*x)  # Boundary condition Dirichlet type in y = y_bottom
 gx_yTop = lambda x: np.sin(np.pi*x)     # Boundary condition Dirichlet type in y = y_right
-gy_xLeft = lambda y: 0                  # Boundary condition Dirichlet type in x = x_left
-gy_xRight = lambda y: 0                 # Boundary condition Dirichlet type in x = x_right
+gy_xLeft = lambda y: np.sin(np.pi*y)    # Boundary condition Dirichlet type in x = x_left
+gy_xRight = lambda y: np.sin(np.pi*y)   # Boundary condition Dirichlet type in x = x_right
 
 x_left = 0
 x_right = 1
 y_bottom = 0
 y_top = 1
+
 
 # Discretization data
 m = 10 # number of nodes in the x-axis
@@ -36,13 +37,13 @@ for i in range(1,m-1):
         A[p, i + (j - 1)*m] = 1/(k*k)
 A_ = np.linalg.inv(A)
 
-b = np.array([gx_yBottom(X[j]) for j in range(m)])
+b = np.array([gx_yBottom(X[i]) for i in range(m)])
 for j in range(1,n-1):
     x = np.array([f(X[i],Y[j]) for i in range(m)])
-    x[0] = gy_xLeft(Y[i])
-    x[-1] = gy_xRight(Y[i])
+    x[0] = gy_xLeft(Y[j])
+    x[-1] = gy_xRight(Y[j])
     b = np.concatenate((b,x))
-b = np.concatenate((b,np.array([gx_yTop(X[j]) for j in range(m)]))) 
+b = np.concatenate((b,np.array([gx_yTop(X[i]) for i in range(m)]))) 
 
 # Solving
 U = np.matmul(A_,b)
@@ -61,7 +62,7 @@ ax.set_ylabel('y')
 ax.set_zlabel('z')
 ax.set_xlim(0,1)
 ax.set_ylim(0,1)
-ax.set_zlim(-0.5,1)
+ax.set_zlim(-0.5,1.5)
 plt.show()
 
 
