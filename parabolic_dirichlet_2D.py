@@ -30,11 +30,10 @@ for i in range((m-2)-1):
     A[i+1,i] = sigma
 
 U = np.array([fx_tStart(X[i]) for i in range (1,m-1)])
-# aqui usar recursividad!!!
 for t in range(n):
     U = np.matmul(A,U)
-    U[0] = sigma*gt_xLeft(T[t])
-    U[-1] = sigma*gt_xRight(T[t])
+    U[0] =  U[0] + sigma*gt_xLeft(T[t])
+    U[-1] =  U[-1] + sigma*gt_xRight(T[t])
 
 U = np.concatenate((np.array([gt_xLeft(T[-1])]),U))
 U = np.concatenate((np.array([gt_xRight(T[-1])]),U))
